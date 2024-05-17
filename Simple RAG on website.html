@@ -1,0 +1,75 @@
+<!--Document type, specified language and meta information on the file. Name of the document.-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Form</title>
+    <style>
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+<body style="background-color: rgb(224, 255, 224);">
+
+    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+</nav>
+    <div style="padding: 5%;">
+    <!--Heading and sub-heading of the website.-->
+        <h1>What to do, chatbot?</h1>
+        <p>What kind of leisure activity would you like to do?</p>
+
+        <!--Defines a form with the method 'post' meaning a request.-->
+        <form action="/" method="post">
+            <!--Text input field on the website with the name user_prompt.--> 
+            <input type="text" name="user_prompt" id="user_prompt" placeholder="Enter your text">
+            <!--Button that runs the Python script when clicked.-->
+            <button type="button" onclick="runPythonScript()">Ask</button>
+        </form>
+
+        <!--Defines a form with the method 'post' meaning a request.-->
+        <form action="/" method="post">
+            <!--Text input field on the website witht he name user_input and a placeholder text.-->
+            <input type="text" name="user_input" placeholder="Enter your text">
+            <!--Button that has the value process.-->
+            <input type="submit" value="Process">
+        </form>
+
+        <!--Checks if there is a processed_output available.-->
+        <div id="processed_output" class="hide">
+            {% if processed_output %}
+                <!--A heading visible on the website.-->
+                <h1>Processed Output:</h1>
+                <!--Shows the processed output, if there is one.-->
+                <p>{{ processed_output }}</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!--JavaScript script that defines a function based on user_prompt, specifies the path to the Python file and runs it as a sub-process.-->
+<script>
+    function runPythonScript() {
+        // Get the path to the Python script.
+        var user_prompt = document.getElementById('user_prompt').value;
+        // Get path to Python script
+        var pythonScriptPath = "ragpython.py";
+        // Send POST request to Python script
+        fetch(pythonScriptPath, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ user_prompt: user_prompt }),
+        })
+        .then(Response => Response.json())
+        .then(data => {
+            // Display process output
+            document.getElementById('processed_output').innerHTML = '<h1>Processed Output:</h1><p>' + data.processed_output + '</p>';
+        });
+    }
+</script>
+
+</body>
+</html>
